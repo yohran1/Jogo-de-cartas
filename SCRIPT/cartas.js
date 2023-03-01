@@ -1,87 +1,87 @@
 const FRONT = "card_front"
 const BACK = "card_back"
-const CARD = 'card'
-const ICON = 'icon'
+const CARD = "card"
+const ICON = "icon"
 
 startGame()
 
 function startGame(){
-   initiaLizeCards(game.createCardsFromApps())
-
+     
+     inicializa_cards(game.create_cards_tecnologia())
 }
 
-function initiaLizeCards(cards){
-    let gameBoard = document.getElementById('gameBoard')
-    gameBoard.innerHTML = ''
-    game.cards.forEach(card => {
+function inicializa_cards(cards){
+    let game_tela = document.getElementById("game_tela")
 
-        let cardElement = document.createElement('div');
-        cardElement.id = card.id;
-        cardElement.classList.add(CARD)
-        cardElement.dataset.icon = card.icon;
+    game_tela.innerHTML = ""
 
-        createCardContent(card, cardElement)
+    game.cards.forEach((card)=>{
 
-        cardElement.addEventListener('click', flipCard)
-        gameBoard.appendChild(cardElement);
+        let card_element = document.createElement('div')
+        card_element.id = card.id
+        card_element.classList.add(CARD)
+        card_element.dataset.icon = card.icon
+
+        criar_conteudo_carta(card, card_element)
+
+        card_element.addEventListener("click", virar_card)
+        game_tela.appendChild(card_element)
+
     })
-    
-}
-function createCardContent(card, cardElement){
-
-    createCardFace(FRONT, card, cardElement)
-    createCardFace(BACK, card, cardElement)
 }
 
-function createCardFace(face, card, element){
+function criar_conteudo_carta(card, card_element){
 
-    let cardElementFace = document.createElement('div')
+    criar_face_carta(FRONT, card, card_element)
+    criar_face_carta(BACK, card, card_element)
 
-    cardElementFace.classList.add(face)
-    if(face == FRONT){
-        let iconElement = document.createElement('img')
+}
 
-        iconElement.classList.add(ICON)
-        iconElement.src = "../img/" + card.icon + ".png"
-        cardElementFace.appendChild(iconElement)
+function criar_face_carta(face, card, element){
+
+    let card_face_element = document.createElement('div')
+    card_face_element.classList.add(face)
+    if(face === FRONT){
+        let icone_element = document.createElement('img')
+        icone_element.classList.add(ICON)
+        icone_element.src = "../img/" + card.icon + ".png"
+        card_face_element.appendChild(icone_element)
     }else{
-        cardElementFace.innerHTML = '&lt/&gt'
+        card_face_element.innerHTML = "&lt/&gt"
     }
-    element.appendChild(cardElementFace)
-}
-function flipCard(){
 
+    element.appendChild(card_face_element)
+}
+
+function virar_card(){
     if(game.setCard(this.id)){
 
-        this.classList.add("flip")
-        if(game.secondCard){
-            if (game.checkMath()){
-                game.clearCards();
-               if (game.checkGameOver()){
-
-                let gameOverLayer = document.getElementById('gameOver')
-
-                gameOverLayer.style.display = 'flex';
-               }
+        this.classList.add('flip')
+        if(game.segunda_carta){
+            if(game.checkMath()){
+                game.clear_cards()
+                if(game.checkGameOver()){
+                    let chamar_gameOver = document.getElementById("gameOver")
+                    chamar_gameOver.style.display="flex"
+                }
             }else{
                 setTimeout(()=>{
-                let firsCardView = document.getElementById(game.firsCard.id);
-                let secondCardView = document.getElementById(game.secondCard.id)
-
-                firsCardView.classList.remove('flip')
-                secondCardView.classList.remove('flip')
-                game.unflipCards()
-                }, 1000)
+                    let primeira_carta_view = document.getElementById(game.primeira_carta.id)
+                    let segunda_carta_view = document.getElementById(game.segunda_carta.id)
         
+                    primeira_carta_view.classList.remove('flip')
+                    segunda_carta_view.classList.remove('flip')
+                    game.cartas_nao_viradas()
+                },1000)
             }
         }
     }
 }
+
 function restart(){
-    game.clearCards()
+    game.clear_cards()
     startGame()
     
-    let gameOverLayer = document.getElementById('gameOver')
-    gameOverLayer.style.display = 'none';
+    let chamar_gameOver = document.getElementById("gameOver")
+    chamar_gameOver.style.display="none"
 }
-

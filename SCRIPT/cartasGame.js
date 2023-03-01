@@ -1,8 +1,10 @@
 let game = {
+
     lockMode: false,
-    firsCard: null,
-    secondCard: null,
-    apps: [
+    primeira_carta: null,
+    segunda_carta: null,
+
+    tecnologias: [
         'bootstrap',
         'css',
         'electron',
@@ -14,86 +16,94 @@ let game = {
         'node',
         'react'
     ],
-    cards: null,
 
-    setCard: function (id){
+    setCard: function(id){
 
-        let card =  this.cards.filter(card => card.id === id)[0];
+        let card = this.cards.filter(card => card.id === id)[0]
+
         console.log(card)
-        if (card.flipped || this.lockMode) {
+        
+        if(card.flipped || this.lockMode){
             return false
         }
 
-        if(!this.firsCard){
-            this.firsCard = card;
-            this.firsCard.flipped = true
+        if(!this.primeira_carta){
+            this.primeira_carta = card
+            this.primeira_carta.flipped = true
             return true
         }else{
-            this.secondCard = card
-            this.secondCard.flipped = true
+            this.segunda_carta = card
+            this.segunda_carta.flipped = true
             this.lockMode = true
             return true
         }
+
     },
-    checkMath: function (){
-        if(!this.firsCard || !this.secondCard){
+    checkMath: function(){
+        if(!this.primeira_carta || !this.segunda_carta){
             return false
         }
-        return this.firsCard.icon === this.secondCard.icon
+        return this.primeira_carta.icon === this.segunda_carta.icon
     },
-    clearCards: function (){
-        this.firsCard = null;
-        this.secondCard = null;
+
+    clear_cards: function(){
+
+        this.primeira_carta = null
+        this.segunda_carta = null
         this.lockMode = false
-    },
-    unflipCards(){
-        this.firsCard.flipped = false
-        this. secondCard.flipped = false
-        this.clearCards()
+
     },
 
-    checkGameOver(){
-        return this.cards.filter(card => !card.flipped).length == 0;
+    cartas_nao_viradas: function(){
+        this.primeira_carta.flipped = false
+        this.segunda_carta.flipped = false
+        this.clear_cards()
     },
 
-     createCardsFromApps: function (){
-        this.cards = [];
+    checkGameOver: function(){
+       return this.cards.filter(card => !card.flipped).length == 0
+    },
+
+    cards: null,
+
+    create_cards_tecnologia: function(){
+        this.cards = []
     
-       this.apps.forEach((app) => {
-            this.cards.push(this.createPairFromApps(app))
+        this.tecnologias.forEach((tecnologia) =>{
+            this.cards.push(this.create_par_cartas(tecnologia))
         })
-        this.cards = this.cards.flatMap(pair=> pair)
-        this.shuffleCards()
+        this.cards = this.cards.flatMap(par => par) 
+        this.embaralhar_cartas()
+
         return this.cards
-    },
+    },   
     
-     createPairFromApps: function(app){
+    create_par_cartas: function(tecnologia){
     
         return [{
-            id: this.createIdWidthApp(app),
-            icon: app,
-            flipped: false,
+            id: this.createId_cartas(tecnologia),
+            icon: tecnologia,
+            flipped: false
         },{
-            id: this.createIdWidthApp(app),
-            icon: app,
-            flipped: false,
+            id: this.createId_cartas(tecnologia),
+            icon: tecnologia,
+            flipped: false
         }]
     },
     
-     createIdWidthApp: function(app){
-        return app + parseInt( Math.random() * 1000);
+    createId_cartas: function(tecnologia){
+        return tecnologia + parseInt(Math.random() * 1000)
     },
 
-     shuffleCards: function(cards){
-        let currentIndex = this.cards.length;
-        let randomIndex = 0;
+    embaralhar_cartas: function(cards){
+        let index_atual = this.cards.length
+        let index_randomico = 0
     
-        while(currentIndex !== 0){
+        while(index_atual !== 0){
+            index_randomico = Math.floor(Math.random() * index_atual)
+            index_atual--
     
-            randomIndex = Math.floor(Math.random() * currentIndex)
-            currentIndex--;
-    
-            [this.cards[randomIndex], this.cards[currentIndex]] = [this.cards[currentIndex], this.cards[randomIndex]]
+            [this.cards[index_randomico], this.cards[index_atual]] = [this.cards[index_atual], this.cards[index_randomico]]
         }
-    },
+    }
 }
